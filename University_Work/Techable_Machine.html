@@ -1,5 +1,15 @@
-<div>Teachable Machine Image Model</div>
-<button type="button" onclick="init()">Start</button>
+
+<h1>Functional Programmnig TRIN</h1>
+<p align="right">
+    <button type="button" onclick="init()">Lest Goooooooooo</button>
+  </p>
+<style>
+    h1 {text-align: center;}
+    p {text-align: center;}
+    div {text-align: center;}
+    button{text-align: center;}
+</style>
+<h1 id="result"></h1>
 <div id="webcam-container"></div>
 <div id="label-container"></div>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
@@ -9,9 +19,11 @@
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
     // the link to your model provided by Teachable Machine export panel
-    const URL = "https://teachablemachine.withgoogle.com/models/Zh9iY5LDS/";
+    const URL = "https://teachablemachine.withgoogle.com/models/e2NxjKmGF/";
 
     let model, webcam, labelContainer, maxPredictions;
+    let count1=0,count2=0;
+    let count1f = 0,count2f;
 
     // Load the image model and setup the webcam
     async function init() {
@@ -23,11 +35,11 @@
         // or files from your local hard drive
         // Note: the pose library adds "tmImage" object to your window (window.tmImage)
         model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
+        maxPredictions = model.getTotalClasses(); // หาคลาสสสสสสสสสสสสสสสสสสส
 
         // Convenience function to setup a webcam
         const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+        webcam = new tmImage.Webcam(500, 400, flip); // width, height, flip
         await webcam.setup(); // request access to the webcam
         await webcam.play();
         window.requestAnimationFrame(loop);
@@ -46,6 +58,14 @@
         window.requestAnimationFrame(loop);
     }
 
+
+    // async function addOne(a){
+    //     a++
+    // }
+    function addOne(a){
+        return a+1
+    }
+
     // run the webcam image through the image model
     async function predict() {
         // predict can take in an image, video or canvas html element
@@ -54,6 +74,24 @@
             const classPrediction =
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
+        if (prediction[0].probability.toFixed(2)>0.8 && count1f == 0){
+            count1 = addOne(count1)
+            count1f = 1;
         }
+        if (prediction[1].probability.toFixed(2)>0.8 && count2f == 0){
+            count2 = addOne(count2)
+            count2f = 1;
+        }
+        if (prediction[0].probability.toFixed(2)<0.8){
+            count1f = 0;
+        }
+        if (prediction[1].probability.toFixed(2)<0.8){
+            count2f = 0;
+        }
+        document.getElementById("result").innerHTML= "สองนิ้วสู้ตายยยย     "+count1+"     ขอนิ้วโป้งแบบเต็มๆ     "+count2;
+        }
+        
     }
+
 </script>
+<h1></h1>
