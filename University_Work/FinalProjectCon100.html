@@ -30,8 +30,11 @@
 
     let model, webcam, labelContainer, maxPredictions;
     let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
-    let mytime = 0,mytimerun = 60 ,myscore = 0
+    let mytime = 0,mytimerun = Math.floor(Math.random() * 10)+5 ,myscore = 0
     let randomvalue = 0,randomstring = ""
+    let intervalId = 0
+    let value = ["ขวดน้ำ","แมส","โทรศัพท์"]
+
     // Load the image model and setup the webcam
     async function init() {
         const modelURL = URL + "model.json";
@@ -62,7 +65,7 @@
         let intervalId = setInterval(() => {
         mytime = mytime+1;
        mytimerun = mytimerun-1
-       document.getElementById("Time").innerHTML= "   "+mytimerun
+       document.getElementById("Time").innerHTML= "Time : "+mytimerun
        if (mytimerun === 0){
         clearInterval(intervalId);
        };}, 1000);
@@ -82,14 +85,9 @@
     }
 
     function changeItem() {
-    randomvalue =  Math.floor(Math.random() * 11);    
-    if (randomvalue >= 6.666){
-        randomstring = "ขวดน้ำ"
-    }else if (randomvalue >= 3.333){
-        randomstring = "แมส"
-    }else{
-        randomstring = "โทรศัพท์"
-    }
+    let n = value.length
+    let index = Math.floor(Math.random() * n); 
+    randomstring = value[index]     
     document.getElementById("Question").innerHTML = randomstring;
   }
 
@@ -109,7 +107,7 @@
                     count1 = addOne(count1)
                     if(mytimerun > 0){
                         myscore++
-                        document.getElementById("Score").innerHTML= " "+myscore
+                        document.getElementById("Score").innerHTML= "Score : "+myscore
                         changeItem();
                     }
                     count1f = 1;
@@ -126,8 +124,9 @@
                 count2 = addOne(count2)
                 if(mytimerun > 0){
                     myscore++
-                    document.getElementById("Score").innerHTML= " "+myscore
+                    document.getElementById("Score").innerHTML= "Score : "+myscore
                     changeItem()
+    
                 }
                 count2f = 1;
             }
@@ -143,8 +142,9 @@
                 count3 = addOne(count3)
                     if(mytimerun > 0){
                         myscore++
-                        document.getElementById("Score").innerHTML= " "+myscore
+                        document.getElementById("Score").innerHTML= "Score : "+myscore
                         changeItem()
+            
                     }
                 count3f = 1;
             }
