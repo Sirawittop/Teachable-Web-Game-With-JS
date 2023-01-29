@@ -5,7 +5,7 @@
     }
     </style>
 <p align="right">
-    <button type="button" onclick="init()">Lest Goooooooooo</button>
+    <button type="button" onclick="init()">GogoGoal</button>
   </p>
 <style>
     h1 {text-align: center;}
@@ -30,7 +30,8 @@
 
     let model, webcam, labelContainer, maxPredictions;
     let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
-    let mytime = 0,mytimerun = 10 ,myscore = 0
+    let changeItem1f = 0,changeItem2f = 0,changeItem3f = 0
+    let mytime = 0,mytimerun = 60 ,myscore = 0
     let randomvalue = 0,randomstring = ""
     // Load the image model and setup the webcam
     async function init() {
@@ -60,15 +61,9 @@
 
 
         changeItem()
-        document.getElementById("Question").innerHTML= randomstring
         let intervalId = setInterval(() => {
-            if (mytimerun == 0){
-                mytimerun == 10
-            }
-            console.log(mytimerun)
         mytime=mytime+1;
        mytimerun = mytimerun-1
-       document.getElementById("Question").innerHTML= randomstring
        document.getElementById("Time").innerHTML= "   "+mytimerun
        if (mytimerun === 0){
         console.log("___________________________")
@@ -90,8 +85,7 @@
     }
 
     function changeItem() {
-  if (myscore === 1) {
-    randomvalue =  Math.floor(Math.random() * 11);
+    randomvalue =  Math.floor(Math.random() * 11);    
     if (randomvalue >= 6.666){
         randomstring = "ขวดน้ำ"
     }else if (randomvalue >= 3.333){
@@ -101,7 +95,7 @@
     }
     document.getElementById("Question").innerHTML = randomstring;
   }
-}
+
 
 
     // run the webcam image through the image model
@@ -126,6 +120,7 @@
             }
             if (prediction[0].probability.toFixed(2)<=0.0){
                 count1f = 0;
+                changeItem1f = 1
             }
 
 
