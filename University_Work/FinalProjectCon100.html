@@ -13,8 +13,12 @@
     div {text-align: center;}
     button{text-align: center;}
 </style>
+<h1 id="result"></h1>
 <div id="webcam-container"></div>
 <div id="label-container"></div>
+<h1 id = "Question"></h1>
+<h1 id = "Time" ></h1>
+<h1 id = "Score"></h1>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 <script type="text/javascript">
@@ -25,6 +29,8 @@
     const URL = "https://teachablemachine.withgoogle.com/models/D_pPVB6ZN/";
 
     let model, webcam, labelContainer, maxPredictions;
+    let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
+    let mytime = 0,mytimestart = 6 ,mytimestop = 1,mytimerun = 30 ,myscore = 0
 
     // Load the image model and setup the webcam
     async function init() {
@@ -59,14 +65,68 @@
         window.requestAnimationFrame(loop);
     }
 
+    //lambda
+    function addOne(a){
+        return a+1
+    }
+
     // run the webcam image through the image model
     async function predict() {
-        // predict can take in an image, video or canvas html element
+       // predict can take in an image, video or canvas html element
         const prediction = await model.predict(webcam.canvas);
         for (let i = 0; i < maxPredictions; i++) {
             const classPrediction =
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
         }
+        if (prediction[0].probability.toFixed(2)>0.9 && count1f == 0){
+            count1 = addOne(count1)
+            if(mytimerun > 0){
+                myscore++
+                document.getElementById("Score").innerHTML= " "+myscore
+            }
+            count1f = 1;
+        }
+        if (prediction[1].probability.toFixed(2)>0.9 && count2f == 0){
+            count2 = addOne(count2)
+            if(mytimerun > 0){
+                myscore++
+                document.getElementById("Score").innerHTML= " "+myscore
+            }
+            count2f = 1;
+        }
+        if (prediction[2].probability.toFixed(2)>0.9 && count3f == 0){
+            count3 = addOne(count3)
+            if(mytimerun > 0){
+                myscore++
+                document.getElementById("Score").innerHTML= " "+myscore
+            }
+            count3f = 1;
+        }
+
+        if (prediction[0].probability.toFixed(2)<0.1){
+            count1f = 0;
+        }
+        if (prediction[1].probability.toFixed(2)<0.1){
+            count2f = 0;
+        }
+        if (prediction[2].probability.toFixed(2)<0.1){
+            count3f = 0;
+        }
+        document.getElementById("result").innerHTML= "ขวดน้ำ"+count1;
+        document.getElementById("result").innerHTML= "แมส"+count2;
+        document.getElementById("result").innerHTML= "โทรศัพท์"+count3;
+        
+        
+    
     }
+
+    setInterval(() => {
+       mytime=mytime+1;
+       mytimerun = mytimerun-1
+       document.getElementById("Question").innerHTML= "Class Sam"
+       document.getElementById("Time").innerHTML= "   "+mytimerun
+       console.log(mytime);
+}, 1000);
+
 </script>
