@@ -30,7 +30,6 @@
 
     let model, webcam, labelContainer, maxPredictions;
     let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
-    let changeItem1f = 0,changeItem2f = 0,changeItem3f = 0
     let mytime = 0,mytimerun = 60 ,myscore = 0
     let randomvalue = 0,randomstring = ""
     // Load the image model and setup the webcam
@@ -47,7 +46,7 @@
 
         // Convenience function to setup a webcam
         const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+        webcam = new tmImage.Webcam(500, 400, flip); // width, height, flip
         await webcam.setup(); // request access to the webcam
         await webcam.play();
         window.requestAnimationFrame(loop);
@@ -59,14 +58,12 @@
             labelContainer.appendChild(document.createElement("div"));
         }
 
-
         changeItem()
         let intervalId = setInterval(() => {
-        mytime=mytime+1;
+        mytime = mytime+1;
        mytimerun = mytimerun-1
        document.getElementById("Time").innerHTML= "   "+mytimerun
        if (mytimerun === 0){
-        console.log("___________________________")
         clearInterval(intervalId);
        };}, 1000);
 
@@ -113,14 +110,13 @@
                     if(mytimerun > 0){
                         myscore++
                         document.getElementById("Score").innerHTML= " "+myscore
+                        changeItem();
                     }
                     count1f = 1;
                 }
-                changeItem();
             }
             if (prediction[0].probability.toFixed(2)<=0.0){
                 count1f = 0;
-                changeItem1f = 1
             }
 
 
@@ -131,10 +127,11 @@
                 if(mytimerun > 0){
                     myscore++
                     document.getElementById("Score").innerHTML= " "+myscore
+                    changeItem()
                 }
                 count2f = 1;
             }
-            changeItem()
+            
         }
         if (prediction[1].probability.toFixed(2)<=0.0){
             count2f = 0;
@@ -147,10 +144,11 @@
                     if(mytimerun > 0){
                         myscore++
                         document.getElementById("Score").innerHTML= " "+myscore
+                        changeItem()
                     }
                 count3f = 1;
             }
-            changeItem()
+            
         }
         if (prediction[2].probability.toFixed(2)<=0.0){
             count3f = 0;
