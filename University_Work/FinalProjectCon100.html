@@ -30,7 +30,7 @@
 
     let model, webcam, labelContainer, maxPredictions;
     let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
-    let mytime = 0,mytimestart = 6 ,mytimestop = 1,mytimerun = 10 ,myscore = 0
+    let mytime = 0,mytimerun = 10 ,myscore = 0
     let randomvalue = 0,randomstring = ""
     // Load the image model and setup the webcam
     async function init() {
@@ -58,19 +58,24 @@
             labelContainer.appendChild(document.createElement("div"));
         }
 
-        
+
+        changeItem()
+        document.getElementById("Question").innerHTML= randomstring
         let intervalId = setInterval(() => {
-       mytime=mytime+1;
+            if (mytimerun == 0){
+                mytimerun == 10
+            }
+            console.log(mytimerun)
+        mytime=mytime+1;
        mytimerun = mytimerun-1
        document.getElementById("Question").innerHTML= randomstring
        document.getElementById("Time").innerHTML= "   "+mytimerun
-       console.log(mytime)
-       if (mytime === 0){
+       if (mytimerun === 0){
+        console.log("___________________________")
         clearInterval(intervalId);
        };}, 1000);
 
     }
-
     
 
     async function loop() {
@@ -84,16 +89,20 @@
         return a+1
     }
 
-    function RandomClass(){
-        randomvalue =  Math.floor(Math.random() * 11);
-        if (randomvalue >= 6.666){
-            randomstring = "ขวดน้ำ"
-        }else if (randomvalue >= 3.333){
-            randomstring = "แมส"
-        }else{
-            randomstring = "โทรศัพท์"
-        }
+    function changeItem() {
+  if (myscore === 1) {
+    randomvalue =  Math.floor(Math.random() * 11);
+    if (randomvalue >= 6.666){
+        randomstring = "ขวดน้ำ"
+    }else if (randomvalue >= 3.333){
+        randomstring = "แมส"
+    }else{
+        randomstring = "โทรศัพท์"
     }
+    document.getElementById("Question").innerHTML = randomstring;
+  }
+}
+
 
     // run the webcam image through the image model
     async function predict() {
@@ -104,46 +113,55 @@
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
         }
-        if (prediction[0].probability.toFixed(2)>=1 && count1f == 0){
-            count1 = addOne(count1)
-            if(mytimerun > 0){
-                myscore++
-                document.getElementById("Score").innerHTML= " "+myscore
+        if (prediction[0].className === randomstring) {
+                if (prediction[0].probability.toFixed(2)>=1 && count1f == 0){
+                    count1 = addOne(count1)
+                    if(mytimerun > 0){
+                        myscore++
+                        document.getElementById("Score").innerHTML= " "+myscore
+                    }
+                    count1f = 1;
+                }
+                changeItem();
             }
-            count1f = 1;
-        }
-        if (prediction[1].probability.toFixed(2)>=1 && count2f == 0){
-            count2 = addOne(count2)
-            if(mytimerun > 0){
-                myscore++
-                document.getElementById("Score").innerHTML= " "+myscore
+            if (prediction[0].probability.toFixed(2)<=0.0){
+                count1f = 0;
             }
-            count2f = 1;
-        }
-        if (prediction[2].probability.toFixed(2)>=1 && count3f == 0){
-            count3 = addOne(count3)
-            if(mytimerun > 0){
-                myscore++
-                document.getElementById("Score").innerHTML= " "+myscore
-            }
-            count3f = 1;
-        }
 
-        if (prediction[0].probability.toFixed(2)<=0){
-            count1f = 0;
+
+
+        if (prediction[1].className === randomstring) {
+            if (prediction[1].probability.toFixed(2)>=1 && count2f == 0){
+                count2 = addOne(count2)
+                if(mytimerun > 0){
+                    myscore++
+                    document.getElementById("Score").innerHTML= " "+myscore
+                }
+                count2f = 1;
+            }
+            changeItem()
         }
-        if (prediction[1].probability.toFixed(2)<=0){
+        if (prediction[1].probability.toFixed(2)<=0.0){
             count2f = 0;
         }
-        if (prediction[2].probability.toFixed(2)<=0){
+
+
+        if (prediction[2].className === randomstring) {
+            if (prediction[2].probability.toFixed(2)>=1 && count3f == 0){
+                count3 = addOne(count3)
+                    if(mytimerun > 0){
+                        myscore++
+                        document.getElementById("Score").innerHTML= " "+myscore
+                    }
+                count3f = 1;
+            }
+            changeItem()
+        }
+        if (prediction[2].probability.toFixed(2)<=0.0){
             count3f = 0;
         }
-        document.getElementById("result").innerHTML= "ขวดน้ำ"+count1;
-        document.getElementById("result").innerHTML= "แมส"+count2;
-        document.getElementById("result").innerHTML= "โทรศัพท์"+count3;
-        
-        
-    
     }
 
 </script>
+
+
