@@ -1,4 +1,4 @@
-<h1>FIND ITEM GAME</h1>
+<h1 class="title">TRIN LOVE KING RAMA 9 </h1>
 <style>
     body {
         background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148907305.jpg?t=st=1658734197~exp=1658734797~hmac=8911f1137bed92036d8675d6a114de985824bed03dcb67e9729b1e1750a61b9b&w=2000');
@@ -29,6 +29,15 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   }
   </style>
+  <style>.title {
+    font-family: italic 1.2em "Fira Sans", serif;;
+    font-size: 75px;
+    color: #000000;
+    text-shadow: 1px 1px rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 300px;
+  }
+  </style>
 <h1 id="result"></h1>
 <div id="webcam-container"></div>
 <div id="label-container"></div>
@@ -47,10 +56,6 @@ button.addEventListener("mouseout", function() {
   button.style.backgroundColor = "#4CAF50";
 });
 
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-    // the link to your model provided by Teachable Machine export panel
     const URL = "https://teachablemachine.withgoogle.com/models/D_pPVB6ZN/";
 
     let model, webcam, labelContainer, maxPredictions;
@@ -60,29 +65,23 @@ button.addEventListener("mouseout", function() {
     let intervalId = 0
     let value = ["ขวดน้ำ","แมส","โทรศัพท์"]
 
-    // Load the image model and setup the webcam
     async function init() {
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
 
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // or files from your local hard drive
-        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
         model = await tmImage.load(modelURL, metadataURL);
         maxPredictions = model.getTotalClasses();
 
-        // Convenience function to setup a webcam
-        const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(500, 400, flip); // width, height, flip
-        await webcam.setup(); // request access to the webcam
+        const flip = true; 
+        webcam = new tmImage.Webcam(500, 400, flip); 
+        await webcam.setup(); 
         await webcam.play();
         window.requestAnimationFrame(loop);
 
-        // append elements to the DOM
+
         document.getElementById("webcam-container").appendChild(webcam.canvas);
         labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
+        for (let i = 0; i < maxPredictions; i++) { 
             labelContainer.appendChild(document.createElement("div"));
         }
 
@@ -99,12 +98,11 @@ button.addEventListener("mouseout", function() {
     
 
     async function loop() {
-        webcam.update(); // update the webcam frame
+        webcam.update(); 
         await predict();
         window.requestAnimationFrame(loop);
     }
 
-    //lambda
     function addOne(a){
         return a+1
     }
@@ -119,9 +117,7 @@ button.addEventListener("mouseout", function() {
 
 
 
-    // run the webcam image through the image model
     async function predict() {
-       // predict can take in an image, video or canvas html element
         const prediction = await model.predict(webcam.canvas);
         for (let i = 0; i < maxPredictions; i++) {
             const classPrediction =
