@@ -1,4 +1,4 @@
-<h1>FIND ITEM GAME</h1>
+<h1>FIND ITEM GAME 64020822 นายสิรวิชญ์ คำชุ่ม</h1>
 <style>
     body {
         background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148907305.jpg?t=st=1658734197~exp=1658734797~hmac=8911f1137bed92036d8675d6a114de985824bed03dcb67e9729b1e1750a61b9b&w=2000');
@@ -6,6 +6,9 @@
     </style>
 <p align="right">
     <button id="myButton" onclick="init()">GOGOGOAL</button>
+  </p>
+  <p align="right">
+    <button id="myButton2" onclick="Reset()">Reset</button>
   </p>
 <style>
     h1 {text-align: center;}
@@ -29,6 +32,22 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   }
   </style>
+  <style> 
+    #myButton2{
+   background-color: #ffa600; /* orange */
+   border: none;
+   color: white;
+   padding: 15px 32px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   margin: 4px 2px;
+   cursor: pointer;
+   border-radius: 10px;
+   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+ }
+ </style>
 <h1 id="result"></h1>
 <div id="webcam-container"></div>
 <div id="label-container"></div>
@@ -46,11 +65,14 @@ button.addEventListener("mouseover", function() {
 button.addEventListener("mouseout", function() {
   button.style.backgroundColor = "#4CAF50";
 });
+const button2 = document.querySelector("#myButton2");
+button2.addEventListener("mouseover", function() {
+  button2.style.backgroundColor = "#cb8400";
+});
+button2.addEventListener("mouseout", function() {
+  button2.style.backgroundColor = "#ffa600";
+});
 
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-    // the link to your model provided by Teachable Machine export panel
     const URL = "https://teachablemachine.withgoogle.com/models/D_pPVB6ZN/";
 
     let model, webcam, labelContainer, maxPredictions;
@@ -59,52 +81,93 @@ button.addEventListener("mouseout", function() {
     let randomvalue = 0,randomstring = ""
     let intervalId = 0
     let value = ["ขวดน้ำ","แมส","โทรศัพท์"]
+    let checkcamera = true ,checkreset = false , checktime = true
 
-    // Load the image model and setup the webcam
     async function init() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
+        if (checkcamera){
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
 
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // or files from your local hard drive
-        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
 
-        // Convenience function to setup a webcam
-        const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(500, 400, flip); // width, height, flip
-        await webcam.setup(); // request access to the webcam
-        await webcam.play();
-        window.requestAnimationFrame(loop);
+            const flip = true; 
+            webcam = new tmImage.Webcam(400, 300, flip); 
+            await webcam.setup(); 
+            await webcam.play();
+            window.requestAnimationFrame(loop);
 
-        // append elements to the DOM
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
+
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            for (let i = 0; i < maxPredictions; i++) { 
             labelContainer.appendChild(document.createElement("div"));
+            checkcamera = false
+            checkreset = true
         }
 
-        changeItem()
+        if (checktime){
+            changeItem()
         let intervalId = setInterval(() => {
         mytime = mytime+1;
        mytimerun = mytimerun-1
        document.getElementById("Time").innerHTML= "Time : "+mytimerun
-       if (mytimerun === 0){
+       console.log("this is init function")
+       checktime = false
+       if (mytimerun == 0){
+        document.getElementById("Time").innerHTML= "Time : END"
         clearInterval(intervalId);
-       };}, 1000);
+       };}, 1000);checktime = true}
 
     }
-    
+    }
+    function Reset(){
+        if (checkreset){ 
+        count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
+        myscore = 0
+        randomvalue = 0,randomstring = ""
+        intervalId = 0
+        mytimerun = Math.floor(Math.random() * 10)+5
+        console.log("My run time : ",mytimerun)
+        document.getElementById("Score").innerHTML= "Score : "+myscore
+        changeItem()
+        if (checktime){
+            let intervalId2 = setInterval(() => {
+            mytimerun = mytimerun-1
+            document.getElementById("Time").innerHTML= "Time : "+mytimerun
+            console.log("this is reset function")
+            checktime = false
+            if (mytimerun == 0){
+                document.getElementById("Time").innerHTML= "Time : END"
+                clearInterval(intervalId2);
+            };}, 1000);checktime = true}
+    }
+}
+
+    function ReTime(){
+        mytimerun = Math.floor(Math.random() * 10)+5
+        console.log("My run time : ",mytimerun)
+        document.getElementById("Score").innerHTML= "Score : "+myscore
+        changeItem()
+        if (checktime){
+            let intervalId3 = setInterval(() => {
+            mytimerun = mytimerun-1
+            document.getElementById("Time").innerHTML= "Time : "+mytimerun
+            console.log("this is reset function")
+            checktime = false
+            if (mytimerun == 0){
+                document.getElementById("Time").innerHTML= "Time : END"
+                clearInterval(intervalId3);
+            };}, 1000);checktime = true}
+    }
+
 
     async function loop() {
-        webcam.update(); // update the webcam frame
+        webcam.update(); 
         await predict();
         window.requestAnimationFrame(loop);
     }
 
-    //lambda
     function addOne(a){
         return a+1
     }
@@ -119,14 +182,12 @@ button.addEventListener("mouseout", function() {
 
 
 
-    // run the webcam image through the image model
     async function predict() {
-       // predict can take in an image, video or canvas html element
         const prediction = await model.predict(webcam.canvas);
         for (let i = 0; i < maxPredictions; i++) {
             const classPrediction =
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+            //labelContainer.childNodes[i].innerHTML = classPrediction;
         }
         if (prediction[0].className === randomstring) {
                 if (prediction[0].probability.toFixed(2)>=1 && count1f == 0){
@@ -135,6 +196,7 @@ button.addEventListener("mouseout", function() {
                         myscore++
                         document.getElementById("Score").innerHTML= "Score : "+myscore
                         changeItem();
+                        ReTime()
                     }
                     count1f = 1;
                 }
@@ -152,6 +214,7 @@ button.addEventListener("mouseout", function() {
                     myscore++
                     document.getElementById("Score").innerHTML= "Score : "+myscore
                     changeItem()
+                    ReTime()
     
                 }
                 count2f = 1;
@@ -170,6 +233,7 @@ button.addEventListener("mouseout", function() {
                         myscore++
                         document.getElementById("Score").innerHTML= "Score : "+myscore
                         changeItem()
+                        ReTime()
             
                     }
                 count3f = 1;
@@ -182,4 +246,3 @@ button.addEventListener("mouseout", function() {
     }
 
 </script>
-
