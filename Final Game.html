@@ -1,0 +1,218 @@
+<h1>FIND ITEM GAME 64020822 นายสิรวิชญ์ คำชุ่ม</h1>
+<style>
+    body {
+        background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148907305.jpg?t=st=1658734197~exp=1658734797~hmac=8911f1137bed92036d8675d6a114de985824bed03dcb67e9729b1e1750a61b9b&w=2000');
+    }
+    </style>
+<p align="right">
+    <button id="myButton" onclick="init()">GOGOGOAL</button>
+  </p>
+  <p align="right">
+    <button id="myButton2" onclick="Reset()">Reset</button>
+  </p>
+<style>
+    h1 {text-align: center;}
+    p {text-align: center;}
+    div {text-align: center;}
+    button{text-align: center;}
+</style>
+<style> 
+     #myButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  }
+  </style>
+  <style> 
+    #myButton2{
+   background-color: #ffa600; /* orange */
+   border: none;
+   color: white;
+   padding: 15px 32px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   margin: 4px 2px;
+   cursor: pointer;
+   border-radius: 10px;
+   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+ }
+ </style>
+<h1 id="result"></h1>
+<div id="webcam-container"></div>
+<div id="label-container"></div>
+<h1 id = "Question"></h1>
+<h1 id = "Time" ></h1>
+<h1 id = "Score"></h1>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+<script type="text/javascript">
+
+const button = document.querySelector("#myButton");
+button.addEventListener("mouseover", function() {
+  button.style.backgroundColor = "#3e8e41";
+});
+button.addEventListener("mouseout", function() {
+  button.style.backgroundColor = "#4CAF50";
+});
+const button2 = document.querySelector("#myButton2");
+button2.addEventListener("mouseover", function() {
+  button2.style.backgroundColor = "#cb8400";
+});
+button2.addEventListener("mouseout", function() {
+  button2.style.backgroundColor = "#ffa600";
+});
+
+    const URL = "https://teachablemachine.withgoogle.com/models/D_pPVB6ZN/";
+
+    let model, webcam, labelContainer, maxPredictions;
+    let count1  = 0 , count2  = 0, count3 = 0,count1f = 0 , count2f = 0, count3f = 0
+    let mytime = 0,mytimerun = Math.floor(Math.random() * 10)+5 ,myscore = 0
+    let randomvalue = 0,randomstring = ""
+    let intervalId = 0
+    let value = ["ขวดน้ำ","แมส","โทรศัพท์"]
+    let checkcamera = true ,checkreset = false , checktime = true , mytimeruncheck = true
+
+    async function init() {
+        if (checkcamera){
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+
+            const flip = true; 
+            webcam = new tmImage.Webcam(400, 300, flip); 
+            await webcam.setup(); 
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+
+
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            for (let i = 0; i < maxPredictions; i++) { 
+            labelContainer.appendChild(document.createElement("div"));
+            checkcamera = false
+            checkreset = true
+        }
+
+        if (checktime){
+            changeItem()
+        let intervalId = setInterval(() => {
+       if(mytimeruncheck){
+        mytimerun = mytimerun-1
+       document.getElementById("Time").innerHTML= "Time : "+mytimerun
+       console.log("this is init function")
+       checktime = false
+       if (mytimerun == 0){
+        mytimeruncheck = false;}
+       };}, 1000);checktime = true}
+
+    }
+    }
+    const Reset = () => {
+        if (checkreset){ 
+        myscore = 0
+        randomvalue = 0,randomstring = ""
+        mytimeruncheck = true
+        ReTime()
+    }
+}
+
+    const ReTime = () =>{
+        mytimerun = Math.floor(Math.random() * 10)+5
+        console.log("My run time : ",mytimerun)
+        console.log("this is score retime function:",myscore)
+        document.getElementById("Score").innerHTML= "Score : "+myscore
+        changeItem()
+    }
+    const addOne = (x) => x + 1
+
+    const changeItem = () => {
+    let n = value.length
+    let index = Math.floor(Math.random() * n); 
+    randomstring = value[index]     
+    document.getElementById("Question").innerHTML = randomstring;
+  }
+
+  
+    async function loop() {
+        webcam.update(); 
+        await predict();
+        window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+        const prediction = await model.predict(webcam.canvas);
+        for (let i = 0; i < maxPredictions; i++) {
+            const classPrediction =
+                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+            //labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+        if (prediction[0].className === randomstring) {
+                if (prediction[0].probability.toFixed(2)>=1 && count1f == 0){
+                    count1 = addOne(count1)
+                    if(mytimerun > 0){
+                        myscore++
+                        document.getElementById("Score").innerHTML= "Score : "+myscore
+                        changeItem();
+                        ReTime()
+                    }
+                    count1f = 1;
+                }
+            }
+        if (prediction[0].probability.toFixed(2)<=0.0){
+            count1f = 0;
+        }
+
+
+
+        if (prediction[1].className === randomstring) {
+            if (prediction[1].probability.toFixed(2)>=1 && count2f == 0){
+                count2 = addOne(count2)
+                if(mytimerun > 0){
+                    myscore++
+                    document.getElementById("Score").innerHTML= "Score : "+myscore
+                    changeItem()
+                    ReTime()
+    
+                }
+                count2f = 1;
+            }
+            
+        }
+        if (prediction[1].probability.toFixed(2)<=0.0){
+            count2f = 0;
+        }
+
+
+        if (prediction[2].className === randomstring) {
+            if (prediction[2].probability.toFixed(2)>=1 && count3f == 0){
+                count3 = addOne(count3)
+                    if(mytimerun > 0){
+                        myscore++
+                        document.getElementById("Score").innerHTML= "Score : "+myscore
+                        changeItem()
+                        ReTime()
+            
+                    }
+                count3f = 1;
+            }
+            
+        }
+        if (prediction[2].probability.toFixed(2)<=0.0){
+            count3f = 0;
+        }
+    }
+
+</script>
